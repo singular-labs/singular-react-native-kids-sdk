@@ -231,11 +231,6 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
                 config.withCustomUserId(customUserId);
             }
 
-            String imei = configJson.optString("imei", null);
-            if (imei != null) {
-                config.withIMEI(imei);
-            }
-
             int sessionTimeout = configJson.optInt("sessionTimeout", -1);
             if (sessionTimeout >= 0) {
                 config.withSessionTimeoutInSec(sessionTimeout);
