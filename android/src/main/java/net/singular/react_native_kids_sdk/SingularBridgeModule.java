@@ -1,4 +1,4 @@
-package net.singular.react_native;
+package net.singular.react_native_kids_sdk;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;

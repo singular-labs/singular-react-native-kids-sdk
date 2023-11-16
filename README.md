@@ -1,4 +1,4 @@
-# Singular React Native SDK
+# Singular React Native Kids SDK
 
 This repo contains Singular's SDK for React Native.
 
