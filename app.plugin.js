@@ -5,8 +5,7 @@ const withSingularPermissions = (config) => {
     'android.permission.INTERNET',
     'android.permission.ACCESS_NETWORK_STATE',
     'com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE',
-    'com.android.vending.CHECK_LICENSE',
-    'com.google.android.gms.permission.AD_ID',
+    'com.android.vending.CHECK_LICENSE'
   ]);
 };
 

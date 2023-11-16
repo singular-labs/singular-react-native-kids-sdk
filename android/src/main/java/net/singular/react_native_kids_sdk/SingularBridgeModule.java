@@ -1,4 +1,4 @@
-package net.singular.react_native;
+package net.singular.react_native_kids_sdk;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
@@ -229,11 +229,6 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
             String customUserId = configJson.optString("customUserId", null);
             if (customUserId != null) {
                 config.withCustomUserId(customUserId);
-            }
-
-            String imei = configJson.optString("imei", null);
-            if (imei != null) {
-                config.withIMEI(imei);
             }
 
             int sessionTimeout = configJson.optInt("sessionTimeout", -1);

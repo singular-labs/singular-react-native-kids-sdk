@@ -1,5 +1,5 @@
 {
-  "name": "singular-react-native",
+  "name": "singular-react-native-kids-sdk",
   "version": "3.3.0",
   "peerDependencies": {
     "react-native": ">=0.46.4"

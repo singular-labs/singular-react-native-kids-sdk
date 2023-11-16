@@ -1,4 +1,4 @@
-package net.singular.react_native;
+package net.singular.react_native_kids_sdk;
 
 import androidx.annotation.NonNull;
 
