@@ -1,9 +1,10 @@
 import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
+import {version} from './package.json';
 
 const {SingularBridge} = NativeModules;
 
 const SDK_NAME = 'ReactNative';
-const SDK_VERSION = '3.3.0-KIDS';
+const SDK_VERSION = version;
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 export class Singular {
@@ -14,7 +15,11 @@ export class Singular {
         this._singularLinkHandler = singularConfig.singularLinkHandler;
         this._conversionValueUpdatedHandler = singularConfig.conversionValueUpdatedHandler;
         this._conversionValuesUpdatedHandler = singularConfig.conversionValuesUpdatedHandler;
-        
+        this._deviceAttributionCallbackHandler = singularConfig.deviceAttributionCallbackHandler;
+
+        this._didSetSdidCallback = singularConfig.didSetSdidCallback;
+        this._sdidReceivedCallback = singularConfig.sdidReceivedCallback;
+
         this._singularNativeEmitter.addListener(
             'SingularLinkHandler',
             singularLinkParams => {
@@ -36,6 +41,30 @@ export class Singular {
             updatedConversionValues => {
                 if (this._conversionValuesUpdatedHandler) {
                     this._conversionValuesUpdatedHandler(updatedConversionValues);
+                }
+            });
+
+        this._singularNativeEmitter.addListener(
+             'DeviceAttributionCallbackHandler',
+              attributes => {
+                if (this._deviceAttributionCallbackHandler) {
+                     this._deviceAttributionCallbackHandler(attributes);
+                }
+        });
+
+        this._singularNativeEmitter.addListener(
+            'SdidReceivedCallback',
+            result => {
+                if (this._sdidReceivedCallback) {
+                    this._sdidReceivedCallback(result);
+                }
+            });
+
+        this._singularNativeEmitter.addListener(
+            'DidSetSdidCallback',
+            result => {
+                if (this._didSetSdidCallback) {
+                    this._didSetSdidCallback(result);
                 }
             });
 
