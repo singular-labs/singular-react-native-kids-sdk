@@ -1,10 +1,9 @@
 import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
-import {version} from './package.json';
 
 const {SingularBridge} = NativeModules;
 
 const SDK_NAME = 'ReactNative';
-const SDK_VERSION = version;
+const SDK_VERSION = '3.4.1-KIDS';
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 export class Singular {
