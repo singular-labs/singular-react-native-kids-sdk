@@ -10,9 +10,8 @@ Pod::Spec.new do |spec|
   spec.author           = "Singular Labs"
   spec.source           = { :git => "https://github.com/singular-labs/Singular-React-Native-Kids-SDK.git", :tag => spec.version.to_s }
   spec.source_files      = "ios/*.{h,m}"
-  spec.platform         = :ios, "8.0"
-  spec.static_framework = true
-  spec.dependency 'Singular-Kids-SDK', '12.3.2'
+  spec.platform         = :ios, "12.0"
+  spec.dependency 'Singular-Kids-SDK', '12.4.2'
 
   spec.dependency 'React'
 end
