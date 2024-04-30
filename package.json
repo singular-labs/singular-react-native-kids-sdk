@@ -1,6 +1,6 @@
 {
   "name": "singular-react-native-kids-sdk",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "peerDependencies": {
     "react-native": ">=0.46.4"
   },
@@ -10,7 +10,7 @@
     "ios/SingularBridge.h",
     "ios/SingularBridge.m",
     "ios/SingularReactNative.xcodeproj/project.pbxproj",
-    "Singular-React-Native.podspec",
+    "Singular-React-Native-Kids-SDK.podspec",
     "Singular.js",
     "SingularAdData.js",
     "SingularConfig.js",
