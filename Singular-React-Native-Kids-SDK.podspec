@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.source           = { :git => "https://github.com/singular-labs/Singular-React-Native-Kids-SDK.git", :tag => spec.version.to_s }
   spec.source_files      = "ios/*.{h,m}"
   spec.platform         = :ios, "12.0"
-  spec.dependency 'Singular-Kids-SDK', '12.4.2'
+  spec.dependency 'Singular-Kids-SDK', '12.6.0'
 
   spec.dependency 'React'
 end
