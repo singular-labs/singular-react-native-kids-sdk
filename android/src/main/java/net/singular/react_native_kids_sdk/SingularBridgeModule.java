@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,6 +50,8 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
     private static SingularConfig config;
     private static SingularLinkHandler singularLinkHandler;
     private static int currentIntentHash;
+
+    private static String[][] pushNotificationsLinkPaths;
 
     public SingularBridgeModule(ReactApplicationContext context) {
         super(context);
@@ -187,15 +190,9 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
             config = new SingularConfig(apikey, secret);
 
             JSONArray espDomains = configJson.optJSONArray("espDomains");
-            if (espDomains != null && espDomains.length() >0){
-                List<String> domainsList = new LinkedList<>();
-                for (int i = 0 ; i < espDomains.length() ; i++){
-                    String domain = espDomains.getString(i);
-                    if (domain != null && domain.length() >0){
-                        domainsList.add(domain);
-                    }
-                }
-                config.withESPDomains(domainsList);
+            List<String> espDomainsList = convertJsonArrayToList(espDomains);
+            if (espDomainsList != null && espDomainsList.size() > 0) {
+                config.withESPDomains(espDomainsList);
             }
 
             long ddlTimeoutSec = configJson.optLong("ddlTimeoutSec", 0);
@@ -244,14 +241,30 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
                 }
             };
 
-            if (reactContext.hasCurrentActivity() && getCurrentActivity().getIntent() != null) {
-                int intentHash = getCurrentActivity().getIntent().hashCode();
+            JSONArray pushNotificationLinkPaths = configJson.optJSONArray("pushNotificationsLinkPaths");
+            String[][] pushSelectors = convertTo2DArray(pushNotificationLinkPaths);
 
-                if (intentHash != currentIntentHash) {
-                    currentIntentHash = intentHash;
+            if (pushSelectors != null) {
+                pushNotificationsLinkPaths = pushSelectors;
+            }
 
-                    long shortLinkResolveTimeout = configJson.optLong("shortLinkResolveTimeout", 10);
-                    config.withSingularLink(getCurrentActivity().getIntent(), singularLinkHandler, shortLinkResolveTimeout);
+            if (reactContext.hasCurrentActivity()) {
+                Intent intent = getCurrentActivity().getIntent();
+                if (intent != null) {
+                    int intentHash = intent.hashCode();
+
+                    if (intentHash != currentIntentHash) {
+                        currentIntentHash = intentHash;
+
+                        long shortLinkResolveTimeout = configJson.optLong("shortLinkResolveTimeout", 10);
+                        config.withSingularLink(getCurrentActivity().getIntent(), singularLinkHandler, shortLinkResolveTimeout);
+
+                        if (intent.getExtras() != null && intent.getExtras().size() > 0) {
+                            if (pushNotificationsLinkPaths != null) {
+                                config.withPushNotificationPayload(intent, pushNotificationsLinkPaths);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -308,7 +321,6 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
             if (!isValidNonEmptyString(customSdid)) {
                 customSdid = null;
             }
-
             config.withCustomSdid(customSdid, new SDIDAccessorHandler() {
                 @Override
                 public void didSetSdid(String result) {
@@ -322,7 +334,35 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
                             .emit("SdidReceivedCallback", result);
                 }
             });
+
+            JSONArray brandedDomains = configJson.optJSONArray("brandedDomains");
+            List<String> brandedDomainsList = convertJsonArrayToList(brandedDomains);
+            if (brandedDomainsList != null && brandedDomainsList.size() > 0) {
+                config.withBrandedDomains(brandedDomainsList);
+            }
         } catch (Throwable ignored) {
+        }
+    }
+
+    private String[][] convertTo2DArray(JSONArray jsonArray) {
+        try {
+            if (jsonArray == null || jsonArray.length() <= 0) {
+                return null;
+            }
+
+            String[][] result = new String[jsonArray.length()][];
+
+            for (int outerIndex = 0; outerIndex < jsonArray.length(); outerIndex++) {
+                JSONArray innerArray = jsonArray.getJSONArray(outerIndex);
+                result[outerIndex] = new String[innerArray.length()];
+                for (int innerIndex = 0; innerIndex < innerArray.length(); innerIndex++) {
+                    result[outerIndex][innerIndex] = innerArray.getString(innerIndex);
+                }
+            }
+
+            return result;
+        } catch (Throwable throwable) {
+            return null;
         }
     }
 
@@ -351,6 +391,26 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
         }
 
         return map;
+    }
+
+    private List<String> convertJsonArrayToList(JSONArray jsonArray) throws JSONException {
+        try {
+            if (jsonArray == null || jsonArray.length() <= 0) {
+                return null;
+            }
+
+            List<String> domainsList = new LinkedList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String domain = jsonArray.getString(i);
+                if (domain != null && domain.length() > 0) {
+                    domainsList.add(domain);
+                }
+            }
+
+            return domainsList;
+        } catch (Throwable throwable) {
+            return null;
+        }
     }
 
     private WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
@@ -419,22 +479,31 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
     }
 
     public static void onNewIntent(Intent intent) {
-        if(intent == null){
+        if(intent == null) {
             return;
         }
 
-        // We want to trigger the singular link handler only if it's registered
-        if (config != null &&
-                singularLinkHandler != null &&
-                intent.hashCode() != currentIntentHash &&
-                intent.getData() != null) {
-            currentIntentHash = intent.hashCode();
-            config.withSingularLink(intent, singularLinkHandler);
-            Singular.init(reactContext, config);
+        if (config == null) {
+            return;
         }
+
+        if (intent.hashCode() == currentIntentHash) {
+            return;
+        }
+
+        currentIntentHash = intent.hashCode();
+
+        if (intent.getData() != null && singularLinkHandler != null) {
+            // We want to trigger the singular link handler only if it's registered
+            config.withSingularLink(intent, singularLinkHandler);
+        }
+
+        if (intent.getExtras() != null && intent.getExtras().size() > 0 && pushNotificationsLinkPaths != null && pushNotificationsLinkPaths.length > 0) {
+            config.withPushNotificationPayload(intent, pushNotificationsLinkPaths);
+        }
+
+        Singular.init(reactContext, config);
     }
-
-
 
     @ReactMethod
     public void createReferrerShortLink(String baseLink,
@@ -485,5 +554,15 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
                 && !nullableJavascriptString.toLowerCase().equals("undefined")
                 && !nullableJavascriptString.toLowerCase().equals("false")
                 && !nullableJavascriptString.equals("NaN");
+    }
+    
+    @ReactMethod
+    public void addListener(String eventName) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+    
+    @ReactMethod
+    public void removeListeners(Integer count) {
+        // Keep: Required for RN built in Event Emitter Calls.
     }
 }

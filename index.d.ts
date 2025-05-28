@@ -33,6 +33,8 @@ export class SingularConfig {
     withFacebookAppId(appId: string): SingularConfig;
     withDeviceAttributionCallbackHandler(deviceAttributionCallbackHandler:(attributes: Map<string, any>) => void): SingularConfig;
     withCustomSdid(customSdid: string, didSetSdidCallback: (result: string) => void, sdidReceivedCallback: (result: string) => void): SingularConfig;
+    withPushNotificationsLinkPaths(pushNotificationsLinkPaths: [[string]]) : SingularConfig;
+    withBrandedDomains(domains: [string]) : SingularConfig;
 }
 
 export class SingularPurchase {
@@ -87,20 +89,22 @@ export class Singular {
     static skanUpdateConversionValues(conversionValue: number, coarse: number, lock: boolean): void;
     static skanGetConversionValue(): number | null;
     static skanRegisterAppForAdNetworkAttribution(): void;
-
+    
     static createReferrerShortLink(baseLink: string, referrerName: string, referrerId: string, passthroughParams: SerializableObject, completionHandler: (result: string, error: string) => void): void;
 
     static adRevenue(adData: SingularAdData): void;
-
+    
     static setGlobalProperty(key: string, value: string, overrideExisting: boolean): boolean;
     static unsetGlobalProperty(key: string): void;
     static clearGlobalProperties(): void;
     static getGlobalProperties(): Map<string, string>;
+
+    static handlePushNotification(pushNotificationPayload: boolean): void;
 }
 
 export class SingularAdData {
     constructor(adPlatform: string, currency: string, revenue: number);
-
+    
     withNetworkName(networkName: string): SingularAdData;
     withAdType(adType: string): SingularAdData;
     withGroupType(adGroupType: string): SingularAdData;
@@ -143,7 +147,7 @@ declare const Events: {
     sngLevelAchieved:string,
     sngSearch:string
 };
-
+   
 declare const Attributes: {
     sngAttrFromDate:string,
     sngAttrToDate:string,

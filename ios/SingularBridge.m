@@ -76,6 +76,7 @@ RCT_EXPORT_METHOD(init:(NSString*) jsonSingularConfig){
     singularConfig.launchOptions = launchOptions;
     singularConfig.supportedDomains = [singularConfigDict objectForKey:@"supportedDomains"];
     singularConfig.espDomains = [singularConfigDict objectForKey:@"espDomains"];
+    singularConfig.brandedDomains = [singularConfigDict objectForKey:@"brandedDomains"];
     singularConfig.shortLinkResolveTimeOut = [[singularConfigDict objectForKey:@"shortLinkResolveTimeout"] longValue];
     singularConfig.singularLinksHandler = ^(SingularLinkParams * params){
         [SingularBridge handleSingularLink:params];
@@ -123,7 +124,7 @@ RCT_EXPORT_METHOD(init:(NSString*) jsonSingularConfig){
 
     NSNumber* sessionTimeout = [singularConfigDict objectForKey:@"sessionTimeout"];
 
-    if (sessionTimeout >= 0) {
+    if ([sessionTimeout intValue] >= 0) {
         [Singular setSessionTimeout:[sessionTimeout intValue]];
     }
 
@@ -141,6 +142,9 @@ RCT_EXPORT_METHOD(init:(NSString*) jsonSingularConfig){
     singularConfig.didSetSdidHandler = ^(NSString *result) {
         [eventEmitter sendEventWithName:SDID_SET_CALLBACK_CONST body:result];
     };
+    
+    // push
+    singularConfig.pushNotificationLinkPath = [singularConfigDict objectForKey:@"pushNotificationsLinkPaths"];
 
     eventEmitter = self;
 
@@ -269,6 +273,10 @@ RCT_EXPORT_METHOD(clearGlobalProperties) {
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGlobalProperties) {
     return [Singular getGlobalProperties];
+}
+
+RCT_EXPORT_METHOD(handlePushNotification:(NSDictionary *)pushNotificationPayload) {
+    [Singular handlePushNotification:pushNotificationPayload];
 }
 
 #pragma mark - Private methods
