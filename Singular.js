@@ -3,7 +3,7 @@ import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
 const {SingularBridge} = NativeModules;
 
 const SDK_NAME = 'ReactNative';
-const SDK_VERSION = '3.6.1-KIDS';
+const SDK_VERSION = '3.8.0-KIDS';
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 export class Singular {
@@ -216,5 +216,11 @@ export class Singular {
 
     static getGlobalProperties() {
         return SingularBridge.getGlobalProperties();
+    }
+
+    static handlePushNotification(pushNotificationPayload) {
+        if (Platform.OS === 'ios') {
+           SingularBridge.handlePushNotification(pushNotificationPayload);
+        }
     }
 }

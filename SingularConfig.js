@@ -31,6 +31,12 @@ export class SingularConfig {
     didSetSdidCallback;
     sdidReceivedCallback;
 
+    // Push notifications
+    pushNotificationsLinkPaths;
+    
+    // branded domains
+    brandedDomains;
+
     constructor(apikey, secret) {
         this.apikey = apikey;
         this.secret = secret;
@@ -44,6 +50,7 @@ export class SingularConfig {
         this.collectOAID = false;
         this.enableLogging = false;
         this.clipboardAttribution = false;
+        this.pushNotificationsLinkPaths = [[]];
     }
 
     withSessionTimeoutInSec(sessionTimeout) {
@@ -143,4 +150,13 @@ export class SingularConfig {
         return this;
     }
 
+    withPushNotificationsLinkPaths(pushNotificationsLinkPaths) {
+        this.pushNotificationsLinkPaths = pushNotificationsLinkPaths;
+        return this;
+    }
+    
+    withBrandedDomains(domains) {
+        this.brandedDomains = domains;
+        return this;
+    }
 }
