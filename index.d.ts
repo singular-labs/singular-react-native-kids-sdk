@@ -35,6 +35,7 @@ export class SingularConfig {
     withCustomSdid(customSdid: string, didSetSdidCallback: (result: string) => void, sdidReceivedCallback: (result: string) => void): SingularConfig;
     withPushNotificationsLinkPaths(pushNotificationsLinkPaths: [[string]]) : SingularConfig;
     withBrandedDomains(domains: [string]) : SingularConfig;
+    withEnableOdmWithTimeoutInterval(enableOdmWithTimeoutInterval: number) : SingularConfig;
 }
 
 export class SingularPurchase {

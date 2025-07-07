@@ -51,6 +51,7 @@ export class SingularConfig {
         this.enableLogging = false;
         this.clipboardAttribution = false;
         this.pushNotificationsLinkPaths = [[]];
+        this.enableOdmWithTimeoutInterval = -1;
     }
 
     withSessionTimeoutInSec(sessionTimeout) {
@@ -159,4 +160,10 @@ export class SingularConfig {
         this.brandedDomains = domains;
         return this;
     }
+
+    withEnableOdmWithTimeoutInterval(enableOdmWithTimeoutInterval) {
+       this.enableOdmWithTimeoutInterval = enableOdmWithTimeoutInterval;
+       return this;
+    }
+
 }
