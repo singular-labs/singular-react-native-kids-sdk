@@ -21,7 +21,6 @@ export class SingularConfig {
 
     // Global Properties
     globalProperties;
-    collectOAID
     enableLogging;
     espDomains;
     facebookAppId;
@@ -47,7 +46,6 @@ export class SingularConfig {
         this.limitDataSharing = null;
         this.shortLinkResolveTimeout = 10; // default timeout 10s
         this.globalProperties = {}
-        this.collectOAID = false;
         this.enableLogging = false;
         this.clipboardAttribution = false;
         this.pushNotificationsLinkPaths = [[]];
@@ -116,11 +114,6 @@ export class SingularConfig {
 
     withGlobalProperty(key, value,overrideExisting) {
         this.globalProperties[key] = {"Key":key, "Value":value,"OverrideExisting":overrideExisting};
-        return this;
-    }
-
-    withOAIDCollection() {
-        this.collectOAID = true;
         return this;
     }
 
