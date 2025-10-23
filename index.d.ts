@@ -26,7 +26,6 @@ export class SingularConfig {
     withShortLinkResolveTimeout(shortLinkResolveTimeout: number): SingularConfig;
     withLimitDataSharing(shouldLimitDataSharing: boolean): SingularConfig;
     withGlobalProperty(key: string, value: string, overrideExisting: boolean): SingularConfig;
-    withOAIDCollection(): SingularConfig;
     withLoggingEnabled(): SingularConfig;
     withLogLevel(level: number): SingularConfig;
     withEspDomains(domains: [string]) : SingularConfig;

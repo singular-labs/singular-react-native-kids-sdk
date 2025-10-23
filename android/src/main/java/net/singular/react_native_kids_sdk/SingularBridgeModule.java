@@ -283,11 +283,6 @@ public class SingularBridgeModule extends ReactContextBaseJavaModule {
                 config.withLimitDataSharing((boolean)limitDataSharing);
             }
 
-            boolean collectOAID = configJson.optBoolean("collectOAID", false);
-            if (collectOAID) {
-                config.withOAIDCollection();
-            }
-
             boolean enableLogging = configJson.optBoolean("enableLogging", false);
             if (enableLogging) {
                 config.withLoggingEnabled();
