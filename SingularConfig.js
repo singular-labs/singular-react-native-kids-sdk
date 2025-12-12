@@ -96,7 +96,7 @@ export class SingularConfig {
         this.deviceAttributionCallbackHandler = deviceAttributionCallbackHandler;
         return this;
     }
-    
+
     withWaitForTrackingAuthorizationWithTimeoutInterval(waitForTrackingAuthorizationWithTimeoutInterval) {
         this.waitForTrackingAuthorizationWithTimeoutInterval = waitForTrackingAuthorizationWithTimeoutInterval;
         return this;
@@ -155,8 +155,7 @@ export class SingularConfig {
     }
 
     withEnableOdmWithTimeoutInterval(enableOdmWithTimeoutInterval) {
-       this.enableOdmWithTimeoutInterval = enableOdmWithTimeoutInterval;
-       return this;
+        this.enableOdmWithTimeoutInterval = enableOdmWithTimeoutInterval;
+        return this;
     }
-
 }
